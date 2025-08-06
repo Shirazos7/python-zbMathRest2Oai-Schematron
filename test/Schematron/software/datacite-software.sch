@@ -261,3 +261,31 @@
 
     </rule>
 </pattern>
+
+<pattern id="static-values-validation">
+    <title>Validation of hardcoded/generated elements</title>
+
+    <!-- 1. language -->
+    <rule context="language">
+        <assert test=". = 'English'">
+            language must be 'English'
+        </assert>
+    </rule>
+
+    <!-- 2. resourceType -->
+    <rule context="resourceType">
+        <assert test="@resourceTypeGeneral = 'Software'">
+            resourceTypeGeneral must be 'Software'
+        </assert>
+        <assert test=". = ':none'">
+            resourceType text must be ':none' (if default value is used)
+        </assert>
+    </rule>
+
+    <!-- 3. format inside formats -->
+    <rule context="formats">
+        <assert test="format = 'application/xml'">
+            formats must contain format 'application/xml'
+        </assert>
+    </rule>
+</pattern>
