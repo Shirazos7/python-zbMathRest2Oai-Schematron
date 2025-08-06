@@ -214,3 +214,50 @@
         </assert>
     </rule>
 </pattern>
+
+<pattern id="rights-validation">
+    <title>Validation of rights element generated from license_terms</title>
+
+    <rule context="rights">
+
+        <!-- Must not be empty -->
+        <assert test="normalize-space(.) != ''">
+            rights must not be empty (it should not be generated for empty or placeholder values)
+        </assert>
+
+        <!-- Must not contain placeholder values -->
+        <assert test=". != 'None' and . != 'none' and not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))">
+            rights must not contain placeholder values like 'None', 'none', or the zbMATH disclaimer
+        </assert>
+
+    </rule>
+
+</pattern>
+
+<pattern id="publisher-validation">
+    <title>Validation of publisher element derived from source_code and homepage</title>
+
+    <rule context="publisher">
+
+        <!-- 1. Publisher must not be empty -->
+        <assert test="normalize-space(.) != ''">
+            publisher must not be empty (use ':unav' if unavailable)
+        </assert>
+
+        <!-- 2. Publisher must be either ':unav' or a valid value -->
+        <assert test=". = ':unav'
+                      or (
+                          . != 'none'
+                          and . != 'null'
+                          and not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))
+                      )">
+            publisher must be a valid value or ':unav' — not 'none', 'null', or zbMATH disclaimer
+        </assert>
+
+        <!-- 3. If not :unav, must look like a URL -->
+        <assert test=". = ':unav' or matches(normalize-space(.), '^https?://')">
+            If publisher is not ':unav', it must be a URL starting with http:// or https://
+        </assert>
+
+    </rule>
+</pattern>
