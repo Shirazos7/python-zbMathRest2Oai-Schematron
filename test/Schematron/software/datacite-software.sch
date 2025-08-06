@@ -97,3 +97,120 @@
 
         </rule>
     </pattern>
+
+    <pattern id="descriptions-validation">
+    <title>Validation of all descriptions: Abstract + TechnicalInfo</title>
+
+
+    <rule context="description[@descriptionType='Abstract' and @xml:lang='en']">
+
+        <!-- Abstract description must not be empty -->
+        <assert test="normalize-space(.) != ''">
+            Abstract description must not be empty (use ':unav' if unavailable)
+        </assert>
+
+        <!-- Must be either real text or exactly ':unav' -->
+        <assert test=". = ':unav' or not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))">
+            Abstract must be ':unav' if original content was unavailable
+        </assert>
+    </rule>
+
+
+    <rule context="description[@descriptionType='TechnicalInfo'
+                               and @xml:lang='en'
+                               and starts-with(normalize-space(.),
+                                               'operating systems:')]">
+
+        <assert test="normalize-space(substring-after(., ':')) != ''">
+            operating systems description must list at least one OS after the “operating systems:” prefix
+        </assert>
+    </rule>
+
+
+    <rule context="description[@descriptionType='TechnicalInfo'
+                               and @xml:lang='en'
+                               and starts-with(normalize-space(.),
+                                               'programming languages :')]">
+
+        <assert test="normalize-space(substring-after(., ':')) != ''">
+            programming languages description must list at least one language after the “programming languages :” prefix
+        </assert>
+    </rule>
+
+
+    <rule context="description[@descriptionType='TechnicalInfo' and @xml:lang='en']">
+
+        <assert test="normalize-space(.) != ''">
+            TechnicalInfo description must not be empty
+        </assert>
+
+        <assert test=". != ':unav'">
+            The TechnicalInfo templates never produce ':unav'; its presence indicates an error
+        </assert>
+    </rule>
+</pattern>
+
+<pattern id="publication-year-full-validation">
+    <title>Validation of publicationYear based on all fallback sources</title>
+
+    <rule context="publicationYear">
+
+        <!-- 1. Must not be empty -->
+        <assert test="normalize-space(.) != ''">
+            publicationYear must not be empty (use ':unav' if unavailable)
+        </assert>
+
+        <!-- 2. Must be :unav or a valid, clean year -->
+        <assert test=". = ':unav'
+                      or (
+                          . != 'None'
+                          and . != 'none'
+                          and not(starts-with(., '0'))
+                          and not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))
+                      )">
+            publicationYear must be a valid year or ':unav'
+        </assert>
+
+        <!-- 3. Must match 4-digit year format if not :unav -->
+        <assert test=". = ':unav' or matches(., '^(19|20)\d{2}$')">
+            publicationYear must be a 4-digit year between 1900–2099, or ':unav'
+        </assert>
+
+    </rule>
+</pattern>
+
+<pattern id="subjects-validation">
+    <title>Validation of subject elements (msc2020 and keyword)</title>
+
+    <!-- Rule applies to each <subject> inside <subjects> -->
+    <rule context="subject">
+
+        <!-- subjectScheme must exist -->
+        <assert test="@subjectScheme">
+            Each subject must have a subjectScheme attribute
+        </assert>
+
+        <!-- subjectScheme must be either 'msc2020' or 'keyword' -->
+        <assert test="@subjectScheme = 'msc2020' or @subjectScheme = 'keyword'">
+            subjectScheme must be either 'msc2020' (for classification) or 'keyword'
+        </assert>
+
+        <!-- Subject text must not be empty -->
+        <assert test="normalize-space(.) != ''">
+            subject must not be empty (must contain a valid value)
+        </assert>
+
+        <!-- Subject must not contain placeholders -->
+        <assert test=". != 'None' and . != 'none' and not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))">
+            subject must not be 'None', 'none', or contain the zbMATH unavailable notice
+        </assert>
+
+    </rule>
+
+    <!-- Optional: check <subjects> container has at least one subject -->
+    <rule context="subjects">
+        <assert test="subject">
+            subjects must contain at least one subject element
+        </assert>
+    </rule>
+</pattern>
