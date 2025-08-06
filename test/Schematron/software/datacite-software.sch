@@ -289,3 +289,76 @@
         </assert>
     </rule>
 </pattern>
+
+<pattern id="related-identifiers-validation">
+    <title>RelatedIdentifier rules for URL / DOI / arXiv sources</title>
+
+    <rule context="relatedIdentifier">
+
+        <!-- 1. @relatedIdentifierType must be one of the three allowed values -->
+        <assert test="@relatedIdentifierType = ('URL', 'DOI', 'ARXIV', 'arXiv')">
+            relatedIdentifierType must be URL, DOI, or ARXIV
+        </assert>
+
+        <!-- 2. @relationType must be either IsSourceOf or IsCitedBy -->
+        <assert test="@relationType = ('IsSourceOf', 'IsCitedBy')">
+            relationType must be IsSourceOf or IsCitedBy
+        </assert>
+
+        <!-- 3. Element text must not be empty or placeholder -->
+        <assert test="normalize-space(.) != ''">
+            relatedIdentifier value must not be empty
+        </assert>
+        <assert test=". != 'None' and . != 'none' and
+                      not(contains(., 'zbMATH Open Web Interface contents unavailable due to conflicting licenses'))">
+            relatedIdentifier value must not contain placeholder values
+        </assert>
+
+        <!-- 4. Type-specific content and relationType checks -->
+        <!-- ------------------------------------------------ -->
+
+        <!-- URL coming from <homepage>  -->
+        <assert test="not(@relatedIdentifierType='URL' and
+                           not(starts-with(., 'https://api.zbmath.org/')) and
+                           @relationType != 'IsSourceOf')">
+            If relatedIdentifierType='URL' and it is *not* a zbMATH API link,
+            relationType must be IsSourceOf
+        </assert>
+
+        <!-- URL coming from <references>  -->
+        <assert test="not(@relatedIdentifierType='URL' and
+                           starts-with(., 'https://api.zbmath.org/') and
+                           @relationType != 'IsCitedBy')">
+            zbMATH API URLs must have relationType='IsCitedBy'
+        </assert>
+
+        <!-- DOI -->
+        <assert test="not(@relatedIdentifierType='DOI' and not(starts-with(., '10.')))">
+            DOI identifiers must start with '10.'
+        </assert>
+        <assert test="not(@relatedIdentifierType='DOI' and @relationType != 'IsCitedBy')">
+            DOI relatedIdentifier must have relationType='IsCitedBy'
+        </assert>
+
+        <!-- arXiv -->
+        <assert test="not((@relatedIdentifierType='ARXIV' or @relatedIdentifierType='arXiv')
+                           and not(matches(., '^\d{4}\.\d{4,5}$')))">
+            arXiv identifiers must follow the modern pattern nnnn.nnnnn
+            (four digits, dot, 4–5 digits)
+        </assert>
+        <assert test="not((@relatedIdentifierType='ARXIV' or @relatedIdentifierType='arXiv')
+                           and @relationType != 'IsCitedBy')">
+            arXiv relatedIdentifier must have relationType='IsCitedBy'
+        </assert>
+
+    </rule>
+
+    <rule context="relatedIdentifiers">
+        <assert test="relatedIdentifier">
+            relatedIdentifiers must contain at least one relatedIdentifier element
+        </assert>
+    </rule>
+</pattern>
+
+
+</schema>
