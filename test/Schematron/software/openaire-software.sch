@@ -81,4 +81,21 @@
         </sch:rule>
     </sch:pattern>
 
+<sch:pattern id="source-title">
+        <sch:rule context="dc:source">
+            <sch:assert test="normalize-space(.) != ''">Source must not be empty</sch:assert>
+        </sch:rule>
+        <sch:rule context="oaire:citationTitle">
+            <sch:assert test="normalize-space(.) != ''">Citation title must not be empty</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+
+    <sch:pattern id="issued-date">
+        <sch:rule context="datacite:date">
+            <sch:assert test="@dateType='Issued'">dateType must be 'Issued'</sch:assert>
+            <sch:assert test="matches(., '^[12][0-9]{3}$')">Issued date must be a valid 4-digit year</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     </sch:schema>
