@@ -51,4 +51,20 @@
         </sch:rule>
     </sch:pattern>
 
+<sch:pattern id="subjects">
+        <sch:rule context="datacite:subject">
+            <sch:assert test="@subjectScheme='msc2020' or @subjectScheme='keyword'">subjectScheme must be 'msc2020' or 'keyword'</sch:assert>
+            <sch:assert test="normalize-space(.) != ''">Subject value must not be empty</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+
+    <sch:pattern id="relatedIdentifiers">
+        <sch:rule context="datacite:relatedIdentifier">
+            <sch:assert test="@relatedIdentifierType='URL'">relatedIdentifierType must be 'URL'</sch:assert>
+            <sch:assert test="@relationType='IsReferencedBy' or @relationType='IsSupplementedBy'">relationType must be valid</sch:assert>
+            <sch:assert test="starts-with(., 'https://zbmath.org/') or starts-with(., 'https://api.zbmath.org/')">Must be zbmath or API URL</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     </sch:schema>
