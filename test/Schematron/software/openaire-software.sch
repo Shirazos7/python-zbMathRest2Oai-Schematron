@@ -36,3 +36,19 @@
             <sch:assert test="datacite:familyName">familyName is required</sch:assert>
         </sch:rule>
     </sch:pattern>
+
+ <sch:pattern id="titles">
+        <sch:rule context="datacite:title">
+            <sch:assert test="normalize-space(.) != ''">Title must not be empty</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- ========== Description ========= -->
+    <sch:pattern id="description">
+        <sch:rule context="dc:description">
+            <sch:assert test="@descriptionType='Abstract'">Description type must be 'Abstract'</sch:assert>
+            <sch:assert test="@xml:lang='en'">Description must be in English</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    </sch:schema>
