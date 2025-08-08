@@ -67,4 +67,18 @@
         </sch:rule>
     </sch:pattern>
 
+<sch:pattern id="alternateIdentifiers">
+        <sch:rule context="datacite:alternateIdentifier">
+            <sch:assert test="@alternateIdentifierType='URL'">Alternate identifier must be of type URL</sch:assert>
+            <sch:assert test="starts-with(., 'http://') or starts-with(., 'https://')">Must be a valid URL</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+
+    <sch:pattern id="license">
+        <sch:rule context="oaire:licenseCondition">
+            <sch:assert test="normalize-space(.) != ''">License must not be empty</sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     </sch:schema>
