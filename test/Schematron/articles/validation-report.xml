@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="yes"?>
+<svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:schold="http://www.ascc.net/xml/schematron" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:res="http://namespace.openaire.eu/schema/oaire/" xmlns:datacite="http://datacite.org/schema/kernel-4" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oaire="http://www.openarchives.org/OAI/2.0/oai_dc/" title="Schematron Validation for OpenAIRE XSLT Output" schemaVersion="">
+  <!--   
+		   
+		   
+		 -->
+  <svrl:ns-prefix-in-attribute-values uri="http://namespace.openaire.eu/schema/oaire/" prefix="res"/>
+  <svrl:ns-prefix-in-attribute-values uri="http://datacite.org/schema/kernel-4" prefix="datacite"/>
+  <svrl:ns-prefix-in-attribute-values uri="http://purl.org/dc/elements/1.1/" prefix="dc"/>
+  <svrl:ns-prefix-in-attribute-values uri="http://www.openarchives.org/OAI/2.0/oai_dc/" prefix="oaire"/>
+  <svrl:active-pattern id="identifier" name="Check for datacite:identifier"/>
+  <svrl:active-pattern id="alternateIdentifiers" name="Check for datacite:alternateIdentifiers"/>
+  <svrl:active-pattern id="creators" name="Check for datacite:creators and creator structure"/>
+  <svrl:active-pattern id="creator-details" name="Check for creator name fields"/>
+  <svrl:fired-rule context="datacite:creator"/>
+  <svrl:active-pattern id="titles" name="Check for datacite:title"/>
+  <svrl:active-pattern id="abstract" name="Check for abstract in dc:description"/>
+  <svrl:active-pattern id="subjects" name="Check for datacite:subject"/>
+  <svrl:active-pattern id="issued-date" name="Check for datacite:date"/>
+  <svrl:active-pattern id="publisher" name="Check for dc:publisher"/>
+  <svrl:active-pattern id="resourceType" name="Check for oaire:resourceType"/>
+  <svrl:active-pattern id="relatedIdentifiers" name="Check for datacite:relatedIdentifier"/>
+  <svrl:active-pattern id="source" name="Check for dc:source"/>
+  <svrl:active-pattern id="citation" name="Check for citation metadata"/>
+</svrl:schematron-output>
