@@ -125,5 +125,71 @@
     </rule>
   </pattern>
 
+ <pattern id="resourceType">
+    <title>Check for oaire:resourceType</title>
+    <rule context="resource">
+      <assert test="oaire:resourceType">
+        ERROR: oaire:resourceType must be present.
+      </assert>
+      <report test="oaire:resourceType and normalize-space(oaire:resourceType) = ''">
+        WARNING: oaire:resourceType is present but empty.
+      </report>
+    </rule>
+  </pattern>
+
+  <!-- datacite:relatedIdentifiers -->
+  <pattern id="relatedIdentifiers">
+    <title>Check for datacite:relatedIdentifier</title>
+    <rule context="resource">
+      <assert test="datacite:relatedIdentifiers/datacite:relatedIdentifier">
+        ERROR: At least one datacite:relatedIdentifier must be present.
+      </assert>
+      <report test="datacite:relatedIdentifiers/datacite:relatedIdentifier[normalize-space(.) = '']">
+        WARNING: One or more datacite:relatedIdentifier entries are empty.
+      </report>
+    </rule>
+  </pattern>
+
+
+<pattern id="source">
+    <title>Check for dc:source</title>
+    <rule context="resource">
+      <assert test="dc:source">
+        ERROR: dc:source must be present.
+      </assert>
+      <report test="dc:source and normalize-space(dc:source) = ''">
+        WARNING: dc:source is present but empty.
+      </report>
+    </rule>
+  </pattern>
+
+  <!-- citation metadata -->
+  <pattern id="citation">
+    <title>Check for citation metadata</title>
+    <rule context="resource">
+      <assert test="oaire:citationTitle">
+        ERROR: oaire:citationTitle is required.
+      </assert>
+      <assert test="oaire:citationVolume">
+        ERROR: oaire:citationVolume is required.
+      </assert>
+      <assert test="oaire:citationIssue">
+        ERROR: oaire:citationIssue is required.
+      </assert>
+      <assert test="oaire:citationStartPage">
+        ERROR: oaire:citationStartPage is required.
+      </assert>
+      <assert test="oaire:citationEndPage">
+        ERROR: oaire:citationEndPage is required.
+      </assert>
+
+      <report test="oaire:citationVolume and normalize-space(oaire:citationVolume) = ''">
+        WARNING: oaire:citationVolume is empty.
+      </report>
+      <report test="oaire:citationIssue and normalize-space(oaire:citationIssue) = ''">
+        WARNING: oaire:citationIssue is empty.
+      </report>
+    </rule>
+  </pattern>
 
 </schema>
