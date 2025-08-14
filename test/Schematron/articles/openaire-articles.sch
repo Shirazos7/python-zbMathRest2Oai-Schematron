@@ -5,6 +5,11 @@
         xmlns:oaire="http://www.openarchives.org/OAI/2.0/oai_dc/"
         queryBinding="xslt">
 
+  <ns prefix="res"      uri="http://namespace.openaire.eu/schema/oaire/"/>
+  <ns prefix="datacite" uri="http://datacite.org/schema/kernel-4"/>
+  <ns prefix="dc"       uri="http://purl.org/dc/elements/1.1/"/>
+  <ns prefix="oaire"    uri="http://www.openarchives.org/OAI/2.0/oai_dc/"/>
+
    <title>Schematron Validation for OpenAIRE XSLT Output</title>
 
   <!-- datacite:identifier -->
