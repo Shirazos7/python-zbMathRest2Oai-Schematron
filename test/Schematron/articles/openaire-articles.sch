@@ -32,3 +32,37 @@
       </report>
     </rule>
   </pattern>
+
+
+  <pattern id="creators">
+    <title>Check for datacite:creators and creator structure</title>
+    <rule context="resource">
+      <assert test="datacite:creators/datacite:creator">
+        ERROR: At least one datacite:creator must be present.
+      </assert>
+      <report test="datacite:creators/datacite:creator and not(datacite:creators/datacite:creator/datacite:creatorName)">
+        WARNING: datacite:creator is present but missing datacite:creatorName.
+      </report>
+    </rule>
+  </pattern>
+
+
+  <pattern id="creator-details">
+    <title>Check for creator name fields</title>
+    <rule context="datacite:creator">
+      <assert test="datacite:creatorName">
+        ERROR: datacite:creatorName is required.
+      </assert>
+      <assert test="datacite:givenName">
+        ERROR: datacite:givenName is required.
+      </assert>
+      <assert test="datacite:familyName">
+        ERROR: datacite:familyName is required.
+      </assert>
+      <report test="not(datacite:nameIdentifier)">
+        WARNING: datacite:nameIdentifier (zbMATH Author Code) is recommended.
+      </report>
+    </rule>
+  </pattern>
+
+
