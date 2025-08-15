@@ -340,4 +340,43 @@
     </sch:rule>
   </sch:pattern>
 
+  <sch:pattern id="p_relatedItems_cites">
+    <sch:title>relatedItems: Cites → JournalArticle</sch:title>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']">
+      <sch:assert test="@relatedItemType='JournalArticle'">relatedItemType must be 'JournalArticle'.</sch:assert>
+      <sch:assert test="d:relatedItemIdentifier">relatedItemIdentifier is required.</sch:assert>
+      <sch:assert test="d:titles/d:title">titles/title is required.</sch:assert>
+      <sch:assert test="d:publicationYear">publicationYear is required.</sch:assert>
+      <sch:assert test="d:creators/d:creator">At least one creator expected for cited items.</sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier">
+      <sch:assert test="@relatedItemIdentifierType='DOI' or @relatedItemIdentifierType='URL'">
+        relatedItemIdentifierType must be 'DOI' or 'URL'.
+      </sch:assert>
+      <sch:report test="@relatedItemIdentifierType='URL' and not(starts-with(normalize-space(.), 'http'))">
+        relatedItemIdentifier URL should start with 'http'.
+      </sch:report>
+      <sch:report test="@relatedItemIdentifierType='DOI' and (not(contains(normalize-space(.), '/')) or contains(., ' '))">
+        relatedItemIdentifier DOI '<sch:value-of select="."/>' should contain a slash and no spaces.
+      </sch:report>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator">
+      <sch:report test="normalize-space(d:creatorName)!=':unav'
+                        and contains(normalize-space(d:creatorName), ',')
+                        and normalize-space(d:givenName) != normalize-space(substring-after(d:creatorName, ','))">
+        (Cited item) givenName mismatch with creatorName.
+      </sch:report>
+      <sch:report test="normalize-space(d:creatorName)!=':unav'
+                        and contains(normalize-space(d:creatorName), ',')
+                        and normalize-space(d:familyName) != normalize-space(substring-before(d:creatorName, ','))">
+        (Cited item) familyName mismatch with creatorName.
+      </sch:report>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear">
+      <sch:assert test="normalize-space(.)=':unav' or (string-length(normalize-space(.))=4 and number(.)=number(.))">
+        (Cited item) publicationYear must be a 4-digit year or ':unav'; got '<sch:value-of select="."/>'.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
