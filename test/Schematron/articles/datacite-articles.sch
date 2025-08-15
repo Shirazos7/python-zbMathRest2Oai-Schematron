@@ -222,4 +222,29 @@
     </sch:rule>
   </sch:pattern>
 
+   <sch:pattern id="p_titles">
+    <sch:title>Titles and fallback</sch:title>
+    <sch:rule context="/d:resource/d:titles">
+      <sch:assert test="count(d:title)=1">Exactly one titles/title expected.</sch:assert>
+      <sch:assert test="d:title/@xml:lang">/titles/title must carry @xml:lang.</sch:assert>
+      <sch:assert test="normalize-space(d:title)!=''">/titles/title must not be empty (':unav' allowed).</sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+ <sch:pattern id="p_publisher">
+    <sch:title>Publisher</sch:title>
+    <sch:rule context="/d:resource/d:publisher">
+      <sch:assert test="normalize-space(.)!=''">publisher must not be empty (':unav' allowed).</sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p_publication_year">
+    <sch:title>Publication year</sch:title>
+    <sch:rule context="/d:resource/d:publicationYear">
+      <sch:assert test="normalize-space(.)=':unav' or (string-length(normalize-space(.))=4 and number(.)=number(.))">
+        publicationYear must be a 4-digit year or ':unav'; got '<sch:value-of select="."/>'.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
