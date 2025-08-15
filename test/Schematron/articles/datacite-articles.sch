@@ -379,4 +379,37 @@
     </sch:rule>
   </sch:pattern>
 
+<sch:pattern id="p_relatedItems_isPublishedIn">
+    <sch:title>relatedItems: IsPublishedIn → Book (container)</sch:title>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']">
+      <sch:assert test="@relatedItemType='Book'">relatedItemType must be 'Book' for container.</sch:assert>
+      <sch:assert test="d:titles/d:title">Container titles/title is required.</sch:assert>
+      <sch:assert test="d:publicationYear">Container publicationYear is required.</sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']/d:relatedItemIdentifier[@relatedItemIdentifierType='ISSN']">
+      <sch:assert test="string-length(normalize-space(.))=9 and substring(.,5,1)='-'">
+        ISSN should be 9 chars with a hyphen at position 5 (e.g., 1234-567X).
+      </sch:assert>
+      <sch:assert test="string-length(translate(concat(substring(.,1,4), substring(.,6,3)),'0123456789',''))=0">
+        ISSN first 4 and next 3 positions must be digits.
+      </sch:assert>
+      <sch:assert test="string-length(translate(substring(.,9,1),'0123456789X',''))=0">
+        ISSN check digit must be 0–9 or 'X'.
+      </sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']">
+      <sch:report test="d:firstPage and d:lastPage
+                        and number(d:firstPage)=number(d:firstPage)
+                        and number(d:lastPage)=number(d:lastPage)
+                        and number(d:lastPage) &lt; number(d:firstPage)">
+        Container lastPage (<sch:value-of select="d:lastPage"/>) is less than firstPage (<sch:value-of select="d:firstPage"/>).
+      </sch:report>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']/d:publicationYear">
+      <sch:assert test="normalize-space(.)=':unav' or (string-length(normalize-space(.))=4 and number(.)=number(.))">
+        Container publicationYear must be a 4-digit year or ':unav'; got '<sch:value-of select="."/>'.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
