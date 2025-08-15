@@ -287,4 +287,57 @@
     </sch:rule>
   </sch:pattern>
 
+    <sch:pattern id="p_related_identifiers">
+    <sch:title>Related identifiers (Cites / IsCitedBy / IsPartOf) — optional</sch:title>
+
+    <sch:rule context="/d:resource">
+      <sch:assert test="count(d:relatedIdentifiers) &lt;= 1">
+        At most one d:relatedIdentifiers container (it may be absent).
+      </sch:assert>
+    </sch:rule>
+
+    <sch:rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier">
+      <sch:assert test="@relationType='Cites' or @relationType='IsCitedBy' or @relationType='IsPartOf'">
+        relationType must be 'Cites', 'IsCitedBy', or 'IsPartOf'.
+      </sch:assert>
+      <sch:assert test="@relatedIdentifierType='DOI' or @relatedIdentifierType='URL' or @relatedIdentifierType='ARXIV'">
+        relatedIdentifierType must be 'DOI', 'URL', or 'ARXIV'.
+      </sch:assert>
+      <sch:assert test="not(@relationType='IsCitedBy') or @relatedIdentifierType='URL'">
+        'IsCitedBy' entries are produced only as zbMATH URLs.
+      </sch:assert>
+      <sch:assert test="not(@relatedIdentifierType='ARXIV') or @relationType='IsPartOf'">
+        ARXIV relatedIdentifier is only produced with relationType='IsPartOf'.
+      </sch:assert>
+      <sch:report test="@relatedIdentifierType='URL' and not(starts-with(normalize-space(.), 'http'))">
+        URL relatedIdentifier should start with 'http'.
+      </sch:report>
+      <sch:report test="@relatedIdentifierType='DOI' and (not(contains(normalize-space(.), '/')) or contains(., ' '))">
+        DOI relatedIdentifier '<sch:value-of select="."/>' should contain a slash and no spaces.
+      </sch:report>
+      <sch:report test="@relatedIdentifierType='ARXIV' and not(starts-with(normalize-space(.), 'arXiv:')) and not(contains(., '.'))">
+        ARXIV relatedIdentifier '<sch:value-of select="."/>' should resemble 'arXiv:YYYY.NNNN' or 'YYYY.NNNN'.
+      </sch:report>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p_rights">
+    <sch:title>Rights statement (zbMATH / CC-BY-SA 4.0)</sch:title>
+    <sch:rule context="/d:resource/d:rightsList">
+      <sch:assert test="count(d:rights)=1">
+        rightsList must contain exactly one rights element with the configured zbMATH statement.
+      </sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:rightsList/d:rights">
+      <sch:assert test="@rightsIdentifier='CC-BY-SA 4.0'">rightsIdentifier must be 'CC-BY-SA 4.0'.</sch:assert>
+      <sch:assert test="@rightsURI='https://creativecommons.org/licenses/by-sa/4.0/'">rightsURI must be that CC BY-SA URL.</sch:assert>
+      <sch:assert test="@rightsIdentifierScheme='zbMATH'">rightsIdentifierScheme must be 'zbMATH'.</sch:assert>
+      <sch:assert test="@schemeURI='https://api.zbmath.org/v1/'">schemeURI must be 'https://api.zbmath.org/v1/'.</sch:assert>
+      <sch:assert test="@xml:lang">rights must have @xml:lang.</sch:assert>
+      <sch:assert test="contains(., 'zbMATH Open OAI-PMH API')">
+        rights text must contain the zbMATH Open OAI-PMH API notice.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
