@@ -5,42 +5,122 @@
   <sch:ns prefix="d" uri="http://datacite.org/schema/kernel-4"/>
   <sch:ns prefix="xml" uri="http://www.w3.org/XML/1998/namespace"/>
 
-    <sch:pattern id="p_resource_root">
-    <sch:title>Resource root and basic structure</sch:title>
+  <sch:pattern id="p_root_and_order">
+    <sch:title>resource root and child element order as emitted by XSLT</sch:title>
+
+    <!-- Exactly one DataCite resource with the schemaLocation your XSLT sets -->
     <sch:rule context="/">
       <sch:assert test="count(/d:resource)=1">
-        Expected exactly one <sch:name/> element in the DataCite namespace as the document root.
+        Must have exactly one d:resource root element.
       </sch:assert>
     </sch:rule>
 
- <sch:rule context="/d:resource">
-      <sch:assert test="d:identifier">
-        Missing primary identifier (/resource/identifier) created from first DOI (or ARXIV when no DOI).
+    <sch:rule context="/d:resource">
+      <!-- schemaLocation attribute as in your literal XSLT -->
+      <sch:assert test="@xsi:schemaLocation='http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd'">
+        d:resource/@xsi:schemaLocation must be 'http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd'.
       </sch:assert>
-      <sch:assert test="d:alternateIdentifiers">
-        Missing /resource/alternateIdentifiers block (zbMATH Identifier, zbMATH Document ID, URL).
+
+      <sch:assert test="count(d:alternateIdentifiers)=1">
+        Exactly one d:alternateIdentifiers element is required (the XSLT always emits this container).
       </sch:assert>
-      <sch:assert test="d:creators">
-        Missing /resource/creators block mapped from contributors/authors.
+      <sch:assert test="count(d:creators)=1">
+        Exactly one d:creators element is required (container is always emitted).
       </sch:assert>
-      <sch:assert test="d:titles">
-        Missing /resource/titles block (or ':unav' fallback).
+      <sch:assert test="count(d:titles)=1">
+        Exactly one d:titles element is required (either from root/title or the ':unav' fallback).
       </sch:assert>
-      <sch:assert test="d:publisher">
-        Missing /resource/publisher (':unav' allowed).
+      <sch:assert test="count(d:rightsList)=1">
+        Exactly one d:rightsList element is required (always emitted).
       </sch:assert>
-      <sch:assert test="d:publicationYear">
-        Missing /resource/publicationYear (4-digit or ':unav').
+      <sch:assert test="count(d:relatedItems)=1">
+        Exactly one d:relatedItems element is required (container is always emitted).
       </sch:assert>
-      <sch:assert test="d:resourceType">
-        Missing /resource/resourceType with @resourceTypeGeneral mapping (JournalArticle/Book/:none).
+
+      <sch:assert test="count(d:identifier) &lt;= 1">
+        At most one d:identifier is allowed (first DOI or first ARXIV only).
       </sch:assert>
-      <sch:assert test="d:rightsList">
-        Missing /resource/rightsList with configured zbMATH/CC-BY-SA 4.0 rights statement.
+      <sch:assert test="count(d:descriptions) &lt;= 1">
+        At most one d:descriptions block is allowed.
       </sch:assert>
-      <!-- subjects, language, descriptions, relatedIdentifiers, relatedItems are optional based on input/filters -->
+      <sch:assert test="count(d:publisher) &lt;= 1">
+        At most one d:publisher is allowed.
+      </sch:assert>
+      <sch:assert test="count(d:publicationYear) &lt;= 1">
+        At most one d:publicationYear is allowed.
+      </sch:assert>
+      <sch:assert test="count(d:subjects) &lt;= 1">
+        At most one d:subjects block is allowed.
+      </sch:assert>
+      <sch:assert test="count(d:language) &lt;= 1">
+        At most one d:language is allowed.
+      </sch:assert>
+      <sch:assert test="count(d:resourceType) &lt;= 1">
+        At most one d:resourceType is allowed.
+      </sch:assert>
+      <sch:assert test="count(d:relatedIdentifiers) &lt;= 1">
+        At most one d:relatedIdentifiers block is allowed.
+      </sch:assert>
+
+      <sch:assert test="not(d:relatedIdentifier)">
+        d:relatedIdentifier elements must appear only inside d:relatedIdentifiers.
+      </sch:assert>
+
+      <sch:assert test="not(d:identifier) or count(d:identifier/preceding-sibling::*)=0">
+        d:identifier (when present) must be the first child element of d:resource.
+      </sch:assert>
+
+      <sch:assert test="count(d:alternateIdentifiers/preceding-sibling::*[not(self::d:identifier)])=0">
+        d:alternateIdentifiers must come immediately after d:identifier (if any) and before all other blocks.
+      </sch:assert>
+
+      <sch:assert test="count(d:creators/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers)])=0">
+        d:creators must come after d:alternateIdentifiers (and identifier, if present).
+      </sch:assert>
+
+      <sch:assert test="not(d:descriptions) or count(d:descriptions/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators)])=0">
+        d:descriptions (when present) must come after d:creators and before d:titles.
+      </sch:assert>
+
+      <sch:assert test="count(d:titles/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions)])=0">
+        d:titles must come after d:creators (and d:descriptions if present).
+      </sch:assert>
+
+      <sch:assert test="not(d:publisher) or count(d:publisher/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles)])=0">
+        d:publisher (when present) must come after d:titles.
+      </sch:assert>
+
+      <sch:assert test="not(d:publicationYear) or count(d:publicationYear/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles or self::d:publisher)])=0">
+        d:publicationYear (when present) must come after d:publisher (if present) and after d:titles.
+      </sch:assert>
+
+      <sch:assert test="not(d:subjects) or count(d:subjects/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles or self::d:publisher or self::d:publicationYear)])=0">
+        d:subjects (when present) must come after d:publicationYear (if present).
+      </sch:assert>
+
+      <sch:assert test="not(d:language) or count(d:language/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles or self::d:publisher or self::d:publicationYear or self::d:subjects)])=0">
+        d:language (when present) must come after d:subjects (if present).
+      </sch:assert>
+
+      <sch:assert test="not(d:resourceType) or count(d:resourceType/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles or self::d:publisher or self::d:publicationYear or self::d:subjects or self::d:language)])=0">
+        d:resourceType (when present) must come after d:language (if present).
+      </sch:assert>
+
+      <sch:assert test="not(d:relatedIdentifiers) or count(d:relatedIdentifiers/preceding-sibling::*[not(self::d:identifier or self::d:alternateIdentifiers or self::d:creators or self::d:descriptions or self::d:titles or self::d:publisher or self::d:publicationYear or self::d:subjects or self::d:language or self::d:resourceType)])=0">
+        d:relatedIdentifiers (when present) must come after d:resourceType (if present).
+      </sch:assert>
+
+      <sch:assert test="count(d:rightsList/preceding-sibling::*[self::d:relatedItems])=0">
+        d:rightsList must appear before d:relatedItems.
+      </sch:assert>
+
+      <sch:assert test="count(d:relatedItems/following-sibling::*)=0">
+        d:relatedItems must be the last child element in d:resource.
+      </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
 
   <sch:pattern id="p_identifier">
     <sch:title>Primary identifier (DOI preferred; ARXIV if no DOI)</sch:title>
