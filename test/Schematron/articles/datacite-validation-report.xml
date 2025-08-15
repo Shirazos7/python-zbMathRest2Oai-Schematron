@@ -1,0 +1,123 @@
+<?xml version="1.0" standalone="yes"?>
+<svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:schold="http://www.ascc.net/xml/schematron" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:d="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" title="" schemaVersion="">
+  <!--   
+		   
+		   
+		 -->
+  <svrl:ns-prefix-in-attribute-values uri="http://datacite.org/schema/kernel-4" prefix="d"/>
+  <svrl:ns-prefix-in-attribute-values uri="http://www.w3.org/XML/1998/namespace" prefix="xml"/>
+  <svrl:ns-prefix-in-attribute-values uri="http://www.w3.org/2001/XMLSchema-instance" prefix="xsi"/>
+  <svrl:active-pattern id="p_root_and_order" name="resource root and child element order as emitted by XSLT"/>
+  <svrl:fired-rule context="/"/>
+  <svrl:fired-rule context="/d:resource"/>
+  <svrl:active-pattern id="p_identifier" name="Primary identifier (DOI preferred; ARXIV if no DOI)"/>
+  <svrl:fired-rule context="/d:resource/d:identifier"/>
+  <svrl:active-pattern id="p_alternate_identifiers" name="Alternate identifiers (zbMATH Identifier, zbMATH Document ID, URL)"/>
+  <svrl:fired-rule context="/d:resource/d:alternateIdentifiers"/>
+  <svrl:fired-rule context="/d:resource/d:alternateIdentifiers/d:alternateIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:alternateIdentifiers/d:alternateIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:alternateIdentifiers/d:alternateIdentifier"/>
+  <svrl:active-pattern id="p_creators" name="Creators mapping, including ':unav' placeholder option"/>
+  <svrl:fired-rule context="/d:resource/d:creators"/>
+  <svrl:fired-rule context="/d:resource/d:creators/d:creator"/>
+  <svrl:successful-report test="normalize-space(d:creatorName)!=':unav' and contains(normalize-space(d:creatorName), ',') and normalize-space(d:givenName) != normalize-space(substring-after(d:creatorName, ','))" location="/*[local-name()='resource' and namespace-uri()='http://datacite.org/schema/kernel-4']/*[local-name()='creators' and namespace-uri()='http://datacite.org/schema/kernel-4']/*[local-name()='creator' and namespace-uri()='http://datacite.org/schema/kernel-4']">
+    <svrl:text>
+        givenName 'Maynard' should equal the part after the comma in creatorName 'Maynard, James'.
+      </svrl:text>
+  </svrl:successful-report>
+  <svrl:successful-report test="normalize-space(d:creatorName)!=':unav' and contains(normalize-space(d:creatorName), ',') and normalize-space(d:familyName) != normalize-space(substring-before(d:creatorName, ','))" location="/*[local-name()='resource' and namespace-uri()='http://datacite.org/schema/kernel-4']/*[local-name()='creators' and namespace-uri()='http://datacite.org/schema/kernel-4']/*[local-name()='creator' and namespace-uri()='http://datacite.org/schema/kernel-4']">
+    <svrl:text>
+        familyName 'James' should equal the part before the comma in creatorName 'Maynard, James'.
+      </svrl:text>
+  </svrl:successful-report>
+  <svrl:active-pattern id="p_descriptions" name="Abstract description"/>
+  <svrl:fired-rule context="/d:resource/d:descriptions"/>
+  <svrl:fired-rule context="/d:resource/d:descriptions/d:description"/>
+  <svrl:active-pattern id="p_titles" name="Titles and fallback"/>
+  <svrl:fired-rule context="/d:resource/d:titles"/>
+  <svrl:active-pattern id="p_publisher" name="Publisher"/>
+  <svrl:fired-rule context="/d:resource/d:publisher"/>
+  <svrl:active-pattern id="p_publication_year" name="Publication year"/>
+  <svrl:fired-rule context="/d:resource/d:publicationYear"/>
+  <svrl:active-pattern id="p_subjects" name="Subjects (MSC and keywords)"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:fired-rule context="/d:resource/d:subjects/d:subject"/>
+  <svrl:active-pattern id="p_language" name="Language"/>
+  <svrl:fired-rule context="/d:resource/d:language"/>
+  <svrl:active-pattern id="p_resource_type" name="Resource type mapping (JournalArticle/Book/:none)"/>
+  <svrl:fired-rule context="/d:resource/d:resourceType"/>
+  <svrl:active-pattern id="p_related_identifiers" name="Related identifiers (Cites / IsCitedBy / IsPartOf) &#x2014; optional"/>
+  <svrl:fired-rule context="/d:resource"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedIdentifiers/d:relatedIdentifier"/>
+  <svrl:active-pattern id="p_rights" name="Rights statement (zbMATH / CC-BY-SA 4.0)"/>
+  <svrl:fired-rule context="/d:resource/d:rightsList"/>
+  <svrl:fired-rule context="/d:resource/d:rightsList/d:rights"/>
+  <svrl:active-pattern id="p_relatedItems_cites" name="relatedItems: Cites &#x2192; JournalArticle"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:relatedItemIdentifier"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:creators/d:creator"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='Cites']/d:publicationYear"/>
+  <svrl:active-pattern id="p_relatedItems_isPublishedIn" name="relatedItems: IsPublishedIn &#x2192; Book (container)"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']/d:relatedItemIdentifier[@relatedItemIdentifierType='ISSN']"/>
+  <svrl:fired-rule context="/d:resource/d:relatedItems/d:relatedItem[@relationType='IsPublishedIn']/d:publicationYear"/>
+</svrl:schematron-output>

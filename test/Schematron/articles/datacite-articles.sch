@@ -4,6 +4,8 @@
   <!-- Namespace for DataCite kernel-4 -->
   <sch:ns prefix="d" uri="http://datacite.org/schema/kernel-4"/>
   <sch:ns prefix="xml" uri="http://www.w3.org/XML/1998/namespace"/>
+  <sch:ns prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance"/>
+
 
   <sch:pattern id="p_root_and_order">
     <sch:title>resource root and child element order as emitted by XSLT</sch:title>
@@ -16,10 +18,13 @@
     </sch:rule>
 
     <sch:rule context="/d:resource">
-      <!-- schemaLocation attribute as in your literal XSLT -->
-      <sch:assert test="@xsi:schemaLocation='http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd'">
-        d:resource/@xsi:schemaLocation must be 'http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd'.
-      </sch:assert>
+     <sch:assert
+             test="contains(@xsi:schemaLocation, 'http://datacite.org/schema/kernel-4 ')
+             and (contains(@xsi:schemaLocation, 'schema.datacite.org/meta/kernel-4/metadata.xsd')
+             or contains(@xsi:schemaLocation, 'schema.datacite.org/meta/kernel-4.1/metadata.xsd'))">
+             d:resource/@xsi:schemaLocation must reference DataCite kernel-4 (4.0 or 4.1).
+     </sch:assert>
+
 
       <sch:assert test="count(d:alternateIdentifiers)=1">
         Exactly one d:alternateIdentifiers element is required (the XSLT always emits this container).
@@ -412,4 +417,4 @@
     </sch:rule>
   </sch:pattern>
 
-  </schema>
+  </sch:schema>
