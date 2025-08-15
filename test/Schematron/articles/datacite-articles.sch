@@ -13,4 +13,33 @@
       </sch:assert>
     </sch:rule>
 
+ <sch:rule context="/d:resource">
+      <sch:assert test="d:identifier">
+        Missing primary identifier (/resource/identifier) created from first DOI (or ARXIV when no DOI).
+      </sch:assert>
+      <sch:assert test="d:alternateIdentifiers">
+        Missing /resource/alternateIdentifiers block (zbMATH Identifier, zbMATH Document ID, URL).
+      </sch:assert>
+      <sch:assert test="d:creators">
+        Missing /resource/creators block mapped from contributors/authors.
+      </sch:assert>
+      <sch:assert test="d:titles">
+        Missing /resource/titles block (or ':unav' fallback).
+      </sch:assert>
+      <sch:assert test="d:publisher">
+        Missing /resource/publisher (':unav' allowed).
+      </sch:assert>
+      <sch:assert test="d:publicationYear">
+        Missing /resource/publicationYear (4-digit or ':unav').
+      </sch:assert>
+      <sch:assert test="d:resourceType">
+        Missing /resource/resourceType with @resourceTypeGeneral mapping (JournalArticle/Book/:none).
+      </sch:assert>
+      <sch:assert test="d:rightsList">
+        Missing /resource/rightsList with configured zbMATH/CC-BY-SA 4.0 rights statement.
+      </sch:assert>
+      <!-- subjects, language, descriptions, relatedIdentifiers, relatedItems are optional based on input/filters -->
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
