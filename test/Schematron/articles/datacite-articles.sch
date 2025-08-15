@@ -166,5 +166,60 @@
     </sch:rule>
   </sch:pattern>
 
+   <sch:pattern id="p_creators">
+    <sch:title>Creators mapping, including ':unav' placeholder option</sch:title>
+    <sch:rule context="/d:resource/d:creators">
+      <sch:assert test="count(d:creator) &gt;= 1
+                        or (count(d:creator)=1
+                            and normalize-space(d:creator/d:creatorName)=':unav'
+                            and normalize-space(d:creator/d:givenName)=':unav'
+                            and normalize-space(d:creator/d:familyName)=':unav'
+                            and normalize-space(d:creator/d:nameIdentifier)=':unav')">
+        Creators must include ≥1 creator OR a single ':unav' placeholder creator when no authors are available.
+      </sch:assert>
+      <sch:report test="count(d:creator)=0">
+        No creators generated. If source has no authors, emit one placeholder creator with ':unav' values; otherwise map authors to creators.
+      </sch:report>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:creators/d:creator">
+      <sch:assert test="d:creatorName">Missing creatorName.</sch:assert>
+      <sch:assert test="d:givenName">Missing givenName (':unav' allowed).</sch:assert>
+      <sch:assert test="d:familyName">Missing familyName (':unav' allowed).</sch:assert>
+      <sch:assert test="d:nameIdentifier">Missing nameIdentifier (':unav' allowed).</sch:assert>
+      <sch:assert test="not(d:nameIdentifier) or d:nameIdentifier/@nameIdentifierScheme='zbMATH Author Code'">
+        nameIdentifier/@nameIdentifierScheme must be 'zbMATH Author Code'.
+      </sch:assert>
+      <sch:assert test="not(d:nameIdentifier) or d:nameIdentifier/@schemeURI='https://zbmath.org/'">
+        nameIdentifier/@schemeURI must be 'https://zbmath.org/'.
+      </sch:assert>
+      <sch:report test="normalize-space(d:creatorName)!=':unav'
+                        and contains(normalize-space(d:creatorName), ',')
+                        and normalize-space(d:givenName) != normalize-space(substring-after(d:creatorName, ','))">
+        givenName '<sch:value-of select="d:givenName"/>' should equal the part after the comma in creatorName '<sch:value-of select="d:creatorName"/>'.
+      </sch:report>
+      <sch:report test="normalize-space(d:creatorName)!=':unav'
+                        and contains(normalize-space(d:creatorName), ',')
+                        and normalize-space(d:familyName) != normalize-space(substring-before(d:creatorName, ','))">
+        familyName '<sch:value-of select="d:familyName"/>' should equal the part before the comma in creatorName '<sch:value-of select="d:creatorName"/>'.
+      </sch:report>
+    </sch:rule>
+  </sch:pattern>
+
+<sch:pattern id="p_descriptions">
+    <sch:title>Abstract description</sch:title>
+    <sch:rule context="/d:resource/d:descriptions">
+      <sch:assert test="count(d:description) &gt;= 1">
+        /descriptions must contain at least one description when present.
+      </sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:descriptions/d:description">
+      <sch:assert test="@descriptionType='Abstract'">description/@descriptionType must be 'Abstract'.</sch:assert>
+      <sch:assert test="@xml:lang">description must have @xml:lang.</sch:assert>
+      <sch:assert test="normalize-space(.)!=''">Abstract text must not be empty.</sch:assert>
+      <sch:assert test="not(contains(., 'zbMATH Open Web Interface contents unavailable'))">
+        Abstract must not contain the placeholder text for unavailable content.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
 
   </schema>
