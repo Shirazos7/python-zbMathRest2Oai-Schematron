@@ -247,4 +247,44 @@
     </sch:rule>
   </sch:pattern>
 
+ <sch:pattern id="p_subjects">
+    <sch:title>Subjects (MSC and keywords)</sch:title>
+    <sch:rule context="/d:resource/d:subjects/d:subject">
+      <sch:report test="@classificationCode and not(@subjectScheme)">
+        MSC subject must have @subjectScheme (e.g., 'msc2020').
+      </sch:report>
+      <sch:report test="@classificationCode and (string-length(@classificationCode)!=5
+                         or string-length(translate(substring(@classificationCode,1,2),'0123456789','')) &gt; 0
+                         or string-length(translate(substring(@classificationCode,3,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','')) &gt; 0
+                         or string-length(translate(substring(@classificationCode,4,2),'0123456789','')) &gt; 0)">
+        MSC @classificationCode '<sch:value-of select="@classificationCode"/>' should look like '11N05'.
+      </sch:report>
+      <sch:report test="@subjectScheme='keyword' and @classificationCode">
+        Keyword subjects should not carry @classificationCode.
+      </sch:report>
+      <sch:assert test="normalize-space(.) != ''">Subject value must not be empty.</sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+   <sch:pattern id="p_language">
+    <sch:title>Language</sch:title>
+    <sch:rule context="/d:resource/d:language">
+      <sch:assert test="normalize-space(.)!=''">language value must not be empty (':unkn' allowed).</sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+   <sch:pattern id="p_resource_type">
+    <sch:title>Resource type mapping (JournalArticle/Book/:none)</sch:title>
+    <sch:rule context="/d:resource/d:resourceType">
+      <sch:assert test="@resourceTypeGeneral">resourceType must carry @resourceTypeGeneral.</sch:assert>
+      <sch:assert test="(contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'article') and @resourceTypeGeneral='JournalArticle')
+                        or (contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'book') and @resourceTypeGeneral='Book')
+                        or (not(contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'article'))
+                            and not(contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'book'))
+                            and @resourceTypeGeneral=':none')">
+        resourceTypeGeneral does not match the text mapping rule for 'article'/'book'/other → ':none'.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
   </schema>
