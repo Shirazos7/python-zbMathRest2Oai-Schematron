@@ -42,4 +42,49 @@
     </sch:rule>
   </sch:pattern>
 
+  <sch:pattern id="p_identifier">
+    <sch:title>Primary identifier (DOI preferred; ARXIV if no DOI)</sch:title>
+    <sch:rule context="/d:resource/d:identifier">
+      <sch:assert test="@identifierType='DOI' or @identifierType='ARXIV'">
+        @identifierType must be 'DOI' (if any DOI existed) or 'ARXIV' (only when no DOI existed); got '<sch:value-of select="@identifierType"/>'.
+      </sch:assert>
+      <!-- coarse DOI check: has slash, no spaces -->
+      <sch:report test="@identifierType='DOI' and (not(contains(normalize-space(.), '/')) or contains(., ' '))">
+        DOI value '<sch:value-of select="." />' does not look like a DOI (should contain a slash and no spaces).
+      </sch:report>
+      <!-- coarse arXiv check: allow 'arXiv:NNNN.NNNN' or 'NNNN.NNNN' (optionally 5 digits after dot) -->
+      <sch:report test="@identifierType='ARXIV' and not(starts-with(normalize-space(.), 'arXiv:'))
+                                 and not(contains(., '.'))">
+        ARXIV value '<sch:value-of select="." />' should resemble 'arXiv:YYYY.NNNN' or 'YYYY.NNNN'.
+      </sch:report>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p_alternate_identifiers">
+    <sch:title>Alternate identifiers (zbMATH Identifier, zbMATH Document ID, URL)</sch:title>
+    <sch:rule context="/d:resource/d:alternateIdentifiers">
+      <sch:assert test="count(d:alternateIdentifier) &gt;= 1">
+        Expected at least one alternateIdentifier (zbMATH Identifier/Document ID/URL) when present in source.
+      </sch:assert>
+    </sch:rule>
+    <sch:rule context="/d:resource/d:alternateIdentifiers/d:alternateIdentifier">
+      <sch:assert test="@alternateIdentifierType='zbMATH Identifier'
+                        or @alternateIdentifierType='zbMATH Document ID'
+                        or @alternateIdentifierType='URL'">
+        alternateIdentifierType must be one of 'zbMATH Identifier', 'zbMATH Document ID', or 'URL'; got '<sch:value-of select="@alternateIdentifierType"/>'.
+      </sch:assert>
+      <sch:assert test="normalize-space(.)!=''">
+        alternateIdentifier value must not be empty.
+      </sch:assert>
+      <sch:report test="@alternateIdentifierType='URL' and not(starts-with(normalize-space(.), 'http'))">
+        URL alternateIdentifier should start with 'http' (got '<sch:value-of select="."/>' ).
+      </sch:report>
+      <!-- no duplicates by type -->
+      <sch:assert test="not(following-sibling::d:alternateIdentifier[@alternateIdentifierType=current()/@alternateIdentifierType])">
+        Duplicate alternateIdentifier of type '<sch:value-of select="@alternateIdentifierType"/>'; only one per type expected.
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+
   </schema>
