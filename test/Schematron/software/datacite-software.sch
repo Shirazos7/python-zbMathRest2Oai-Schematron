@@ -114,3 +114,25 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
+   <sch:pattern id="p-publicationYear">
+    <sch:rule context="datacite:publicationYear">
+      <!-- either ':unav' OR a 4-digit year (per your fallbacks) -->
+      <sch:assert test=".=':unav' or (string-length(normalize-space(.))=4 and translate(normalize-space(.),'0123456789','')='' and (starts-with(normalize-space(.),'1') or starts-with(normalize-space(.),'2')))">
+        publicationYear must be ':unav' or a 4-digit year
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+
+  <sch:pattern id="p-subjects">
+    <sch:rule context="datacite:subject">
+      <sch:assert test="@subjectScheme='msc2020' or @subjectScheme='keyword'">
+        subject/@subjectScheme must be 'msc2020' or 'keyword'
+      </sch:assert>
+      <sch:assert test="normalize-space(.)!=''">
+        subject value must not be empty
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
