@@ -71,3 +71,30 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+  <sch:pattern id="p-creators">
+    <sch:rule context="datacite:creator">
+      <sch:assert test="datacite:creatorName[@nameType='Personal']">
+        creatorName must have @nameType='Personal'
+      </sch:assert>
+      <!-- your XSLT always outputs given/family; may be ':unav' -->
+      <sch:assert test="datacite:givenName">
+        givenName is required (may be ':unav')
+      </sch:assert>
+      <sch:assert test="datacite:familyName">
+        familyName is required (may be ':unav')
+      </sch:assert>
+      <sch:assert test="normalize-space(datacite:creatorName)!=''">
+        creatorName must not be empty (may be ':unav')
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+
+  <sch:pattern id="p-titles">
+    <sch:rule context="datacite:title">
+      <sch:assert test="normalize-space(.)!=''">
+        Title must not be empty (':unav' allowed by your logic, but not empty)
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
