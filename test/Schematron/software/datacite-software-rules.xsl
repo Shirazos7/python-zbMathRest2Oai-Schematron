@@ -271,7 +271,7 @@
 <axsl:template match="datacite:publisher" priority="1000" mode="M13"><svrl:fired-rule xmlns:svrl="http://purl.oclc.org/dsdl/svrl" context="datacite:publisher"/>
 
 		<!--ASSERT -->
-<axsl:choose><axsl:when test=".:=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')"/><axsl:otherwise><svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:schold="http://www.ascc.net/xml/schematron" test=".:=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')"><axsl:attribute name="location"><axsl:apply-templates select="." mode="schematron-get-full-path"/></axsl:attribute><svrl:text>
+<axsl:choose><axsl:when test=".=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')"/><axsl:otherwise><svrl:failed-assert xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:schold="http://www.ascc.net/xml/schematron" test=".=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')"><axsl:attribute name="location"><axsl:apply-templates select="." mode="schematron-get-full-path"/></axsl:attribute><svrl:text>
         publisher must be ':unav' or a URL (source_code/homepage)
       </svrl:text></svrl:failed-assert></axsl:otherwise></axsl:choose><axsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/></axsl:template><axsl:template match="text()" priority="-1" mode="M13"/><axsl:template match="@*|node()" priority="-2" mode="M13"><axsl:apply-templates select="@*|*|comment()|processing-instruction()" mode="M13"/></axsl:template>
 
