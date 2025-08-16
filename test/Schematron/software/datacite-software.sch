@@ -169,7 +169,7 @@
   <sch:pattern id="p-publisher">
     <sch:rule context="datacite:publisher">
       <!-- stylesheet emits source_code OR homepage OR ':unav' -->
-      <sch:assert test=".:=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')">
+      <sch:assert test=".=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')">
         publisher must be ':unav' or a URL (source_code/homepage)
       </sch:assert>
     </sch:rule>
