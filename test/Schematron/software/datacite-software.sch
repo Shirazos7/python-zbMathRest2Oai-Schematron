@@ -174,3 +174,52 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
+ <sch:pattern id="p-relatedIdentifiers">
+    <sch:rule context="datacite:relatedIdentifier">
+      <sch:assert test="@relationType">
+        relatedIdentifier must have @relationType
+      </sch:assert>
+      <sch:assert test="@relatedIdentifierType">
+        relatedIdentifier must have @relatedIdentifierType
+      </sch:assert>
+
+
+      <sch:assert test="(@relationType='IsSourceOf' and @relatedIdentifierType='URL') or (@relationType!='IsSourceOf')">
+        If relationType is 'IsSourceOf', relatedIdentifierType must be 'URL'
+      </sch:assert>
+
+
+      <sch:assert test="@relationType='IsSourceOf' or @relationType='IsCitedBy'">
+        relationType must be 'IsSourceOf' (homepage) or 'IsCitedBy' (citations)
+      </sch:assert>
+
+
+      <sch:assert test="(@relatedIdentifierType!='URL') or
+                        starts-with(normalize-space(.),'https://api.zbmath.org/v1/document/') or
+                        starts-with(normalize-space(.),'https://zbmath.org/') or
+                        starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')">
+        URL relatedIdentifier must be a valid URL; citations typically point to zbMATH API or site
+      </sch:assert>
+
+
+      <sch:assert test="not(starts-with(normalize-space(.),'10.')) or
+                        (@relatedIdentifierType='DOI' and @relationType='IsCitedBy')">
+        Strings starting with '10.' must be emitted as DOI with relationType='IsCitedBy'
+      </sch:assert>
+
+
+      <sch:assert test="not(string-length(normalize-space(.)) &gt; 6 and substring(normalize-space(.),5,1)='.') or
+                        ((@relatedIdentifierType='ARXIV' or @relatedIdentifierType='arXiv') and @relationType='IsCitedBy')">
+        arXiv-like tokens must be emitted as ARXIV/arXiv with relationType='IsCitedBy'
+      </sch:assert>
+    </sch:rule>
+
+
+    <sch:rule context="datacite:relatedIdentifiers">
+      <sch:assert test="count(datacite:relatedIdentifier[@relationType='IsSourceOf']) &lt;= 1">
+        At most one homepage relatedIdentifier (IsSourceOf) should be present
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
