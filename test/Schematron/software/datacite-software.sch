@@ -136,3 +136,23 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+   <sch:pattern id="p-language">
+    <sch:rule context="datacite:language">
+      <sch:assert test="normalize-space(.)='English'">
+        language must be 'English' (as set by the stylesheet)
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p-resourceType">
+    <sch:rule context="datacite:resourceType">
+      <sch:assert test="@resourceTypeGeneral='Software'">
+        resourceType/@resourceTypeGeneral must be 'Software'
+      </sch:assert>
+      <!-- your XSLT writes literal ':none' -->
+      <sch:assert test="normalize-space(.)=':none'">
+        resourceType text content must be ':none'
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
