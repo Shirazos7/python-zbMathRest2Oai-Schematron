@@ -223,3 +223,21 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
+   <sch:pattern id="p-misc">
+    <!-- ensure there is exactly one Abstract -->
+    <sch:rule context="datacite:descriptions">
+      <sch:assert test="count(datacite:description[@descriptionType='Abstract'])=1">
+        There must be exactly one Abstract description
+      </sch:assert>
+    </sch:rule>
+
+    <sch:rule context="datacite:subjects">
+      <sch:assert test="count(datacite:subject[@subjectScheme='msc2020']) &gt;= 1">
+        At least one msc2020 subject must be present
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+</sch:schema>
