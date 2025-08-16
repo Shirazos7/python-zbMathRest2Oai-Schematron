@@ -98,3 +98,19 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
+  <sch:pattern id="p-descriptions">
+    <!-- abstract (always emitted; ':unav' if blocked/missing) -->
+    <sch:rule context="datacite:descriptions">
+      <sch:assert test="datacite:description[@descriptionType='Abstract']">
+        An Abstract description must exist
+      </sch:assert>
+    </sch:rule>
+
+    <sch:rule context="datacite:description[@descriptionType='TechnicalInfo']">
+      <sch:assert test="contains(.,'operating systems') or contains(.,'programming languages')">
+        TechnicalInfo must originate from operating_systems or programming_languages
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
