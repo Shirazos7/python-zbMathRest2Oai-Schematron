@@ -156,3 +156,21 @@
       </sch:assert>
     </sch:rule>
   </sch:pattern>
+
+
+  <sch:pattern id="p-formats">
+    <sch:rule context="datacite:format">
+      <sch:assert test="normalize-space(.)='application/xml'">
+        format must be 'application/xml'
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p-publisher">
+    <sch:rule context="datacite:publisher">
+      <!-- stylesheet emits source_code OR homepage OR ':unav' -->
+      <sch:assert test=".:=':unav' or starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')">
+        publisher must be ':unav' or a URL (source_code/homepage)
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
