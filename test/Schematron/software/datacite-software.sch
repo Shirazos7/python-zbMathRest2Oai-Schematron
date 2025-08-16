@@ -36,9 +36,38 @@
         formats/format is required
       </sch:assert>
 
-      <!-- if relatedIdentifiers exists it must contain items -->
       <sch:assert test="not(datacite:relatedIdentifiers) or datacite:relatedIdentifiers/datacite:relatedIdentifier">
         relatedIdentifiers, if present, must contain at least one relatedIdentifier
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+   <sch:pattern id="p-identifier">
+    <sch:rule context="datacite:identifier">
+      <sch:assert test="@identifierType='swMATH'">
+        identifier/@identifierType must be 'swMATH' (maps from /root/id)
+      </sch:assert>
+      <sch:assert test="normalize-space(.)!=''">
+        identifier value must not be empty
+      </sch:assert>
+      <!-- value is numeric in your data; allow leading digits only -->
+      <sch:assert test="translate(normalize-space(.),'0123456789','')=''">
+        identifier should be numeric (swMATH internal id)
+      </sch:assert>
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern id="p-alternateIdentifiers">
+    <sch:rule context="datacite:alternateIdentifier">
+      <sch:assert test="@alternateIdentifierType='URL'">
+        alternateIdentifierType must be 'URL'
+      </sch:assert>
+      <sch:assert test="starts-with(normalize-space(.),'http://') or starts-with(normalize-space(.),'https://')">
+        alternateIdentifier must be a URL
+      </sch:assert>
+      <!-- your template rewrites zbmath_url → swmath.org/software/... -->
+      <sch:assert test="starts-with(normalize-space(.),'https://swmath.org/')">
+        alternateIdentifier should point to swmath.org (derived from zbmath_url)
       </sch:assert>
     </sch:rule>
   </sch:pattern>
